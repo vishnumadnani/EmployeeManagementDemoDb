@@ -1,0 +1,44 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.demo {
+    display : none;
+}
+
+.btn-edit{border-radius: 4px;}
+.btn-delete{border-radius: 4px;}
+.btn-plus{border-radius: 4px;}
+.btn-search {
+    border-radius: 2px;
+}
+.btn-add {
+    border-radius: 2px;
+}
+.skill-add {
+    border-radius: 2px;
+}
+.skill-remove {
+    border-radius: 2px;
+}
+.btn-create {
+    border-radius: 2px;
+}
+.btn-reset {
+    border-radius: 2px;
+}

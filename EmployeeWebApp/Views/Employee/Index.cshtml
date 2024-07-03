@@ -1,0 +1,101 @@
+﻿@using Employee.Domain.Employees;
+@model IEnumerable<Emp>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+
+
+<script src="https://kit.fontawesome.com/28b18ec748.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $(".fa-circle-plus").click(function () {
+           $(this).closest("tr").next(".demo").toggle();
+            $(this).toggleClass("fa-solid fa-circle-plus fa-solid fa-circle-minus")
+        })     
+    })
+</script>
+
+<div class="container p-3">
+    <div class="row p-3">
+        <div class="col-6">
+            <h2 class="text-primary">Employees</h2>
+        </div>
+        
+        <div class="col-6 text-end">          
+            <a class="btn btn-primary btn-add" asp-action="Create" asp-controller="Employee"><i class="bi bi-plus-circle"></i>&nbsp;Add New Employee</a>
+        </div>       
+    </div>
+</div>
+
+<center><h1>List of Employees</h1></center>
+<table class="table table-bordered table-striped" style="width:100%" id="empdata">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>@Html.ActionLink("FirstName", "Index", new{sortOrder = ViewBag.FirstNameSort})</th>
+            <th>@Html.ActionLink("Email", "Index", new{sortOrder = ViewBag.EmailSort})</th>
+            <th>Gender</th>
+            <th>Designation</th>
+            <th>Skill</th>
+            <th>Actions</th>
+        </tr>  
+    </thead>
+
+    <tbody id="employeeList">
+        @foreach(var emp in Model)
+         {
+            <tr class="table-light">
+                <td><img src="~/Images/@emp.ImageView" class="rounded-circle"  width="50px" height="50px"></td>              
+                <td >@emp.firstName</td>
+                <td>@emp.email</td>
+                <td>@emp.gender</td>
+                <td>@emp.designation</td>
+                <td>                 
+                    @{
+                        var skillsList = "";
+                        foreach (var skills in emp.Skills)
+                        {
+                            var skill = ((SkillsModel)skills).Name;
+                            skillsList += skill + ",";
+                        }
+                        skillsList = skillsList.TrimEnd(',');
+                        <div>@skillsList</div>
+                    }             
+                </td>         
+                <td>
+                    <a class="btn btn-warning btn-sm btn-edit" asp-action="Edit" asp-controller="Employee" asp-route-id="@emp.Id"><i class="bi bi-pencil-square"></i></a> |
+                    <a class="btn btn-danger btn-sm btn-delete" asp-action="Delete" asp-controller="Employee" asp-route-id="@emp.Id"><i class="bi bi-trash3"></i></a> |
+                    <a class='btn btn-sm btn-info btn-plus'><i class='fa-solid fa-circle-plus'></i></a>          
+                </td>
+            </tr>
+                
+            <tr class="demo">
+                <td></td>
+                <td><b>LastName :- </b>@emp.lastName</td>
+                <td><b>Hobby :- </b>@emp.Cricket</td>
+                <td><b>BirthDate :- </b>@emp.birthDate</td>
+            </tr>
+                                               
+         }
+    </tbody>
+</table>
+
+@Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new{page, @class="pagination"}),
+new X.PagedList.Web.Common.PagedListRenderOptions{
+    LiElementClasses = new string[] {"page-item"},
+    PageClasses = new string[] {"page-link"}
+})
+
+
+
+
+
+
+
+
+
+                    
+
+  
+

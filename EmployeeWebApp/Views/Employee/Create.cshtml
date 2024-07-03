@@ -1,0 +1,131 @@
+﻿@using Employee.Domain.Employees;
+@model EmpAddRequest;
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+<form method="post" id="empform">
+    <div class="border p-3 mt-4">
+        <div>
+            <h2 class="text-primary">Create Employees</h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col">
+                @Html.Label("First Name")
+                @Html.TextBoxFor(m => m.firstName, new{@class="form-control firstName"})
+                @Html.ValidationMessageFor(m => m.firstName, "", new{@class="text-danger"})
+            </div>
+            <div class="col">          
+                @Html.Label("Last Name")
+                @Html.TextBoxFor(m => m.lastName, new{@class="form-control lastName"})
+                @Html.ValidationMessageFor(m => m.lastName, "", new{@class="text-danger"})
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div class="col">
+                @Html.Label("Email")
+                @Html.TextBoxFor(m => m.email, new{@class="form-control email"})
+                @Html.ValidationMessageFor(m => m.email, "", new{@class="text-danger"})                
+            </div>
+            <div class="col">
+                @Html.Label("Gender")<br />         
+                @Html.RadioButtonFor(m=>m.gender,"Male") Male
+                @Html.RadioButtonFor(m=>m.gender,"Female") Female      <br />        
+                @Html.ValidationMessageFor(m => m.gender, "", new{@class="text-danger"})               
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div class="col">
+                @Html.Label("Designation")<br>
+                @Html.DropDownListFor(m => m.designation, new SelectList(Enum.GetValues(typeof(Employee.Domain.Employees.designation))),  "Select Value")   <br />
+                @Html.ValidationMessageFor(m => m.designation, "", new{@class="text-danger"})              
+            </div>
+            <div class="col">     
+                @Html.Label("Hobby")<br />
+                @Html.CheckBox("Learning", false) @Html.Label("Learning") |
+                @Html.CheckBox("Cricket", false) @Html.Label("Cricket") |
+                @Html.CheckBox("Music", false) @Html.Label("Music")
+                @Html.ValidationMessageFor(m => m.Cricket, "", new{@class="error"})               
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div class="col">
+                @Html.Label("Birth Date")<br />
+                @Html.EditorFor(m => m.birthDate, new{htmlAttributes = new{@class="datepicker form-control"}})
+                @Html.ValidationMessageFor(m => m.birthDate, "", new{@class="text-danger"})
+            </div>
+            <div class="col">
+                @Html.Label("Image")
+                @Html.TextBoxFor(m => m.ImageView , new{type = "file" , @class = "form-control" , @id="image"})
+                <div class="holder">
+                    <img id="imgPreview"  height="100" width="150"/>
+                </div>
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="col">
+                    @Html.Label("Skill")
+                <div class="input-group">
+                    @Html.TextBox("Skill", "" ,new {@class = "form-control"}) &nbsp;
+                    <span class="input-group-btn">               
+                        <button class="btn btn-success skill-add" type="button" id="AddSkill"><i class="fa-sharp fa-solid fa-plus"></i>Add</button>
+                    </span>&nbsp;
+                    <span class="input-group-btn">
+                        <button class="btn btn-danger skill-remove" type="button" id="RemoveSkill"><i class="fa-solid fa-delete-left"></i>&nbsp;Remove</button>
+                    </span>
+                    @Html.ValidationMessageFor(m => m.EmpSkills, "", new{@class="text-danger"})                   
+                </div>
+                @Html.HiddenFor(x=>x.EmpSkills , new{@id="hiddenSkill"})
+                <div id="list-skill">
+                </div>            
+            </div>
+        </div>                   
+    </div><br />
+               
+        @Html.TextBox("Submit","Create", new{type="submit", @class="btn btn-outline-primary btn-create"})
+        <button type="Reset" class="btn btn-outline-dark btn-reset">Reset</button><br /><br />
+        
+        @Html.ActionLink("Back to List", "Index", "Employee")
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#AddSkill").click(function () {
+            let itemList = $("#Skill").val();
+            if(itemList.trim() !== ' '){
+                $("#list-skill").append(`<li>` + ('<div class="Item">' + itemList + '<span class="btn-danger ms-2"> <i class="fa-solid fa-trash"></i> </span> </div>  '));
+                $("#Skill").val(' ');
+                let input = $(".Item").text();
+                $("#hiddenSkill").val(input);
+            }       
+        });
+        $("#list-skill").on("click", "li", function () {
+            $(this).remove();
+        });
+
+        $("#RemoveSkill").click(function () {
+            $("#Skill").val(' ');
+        })
+
+        $("#image").change(function () {
+            const file = this.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (event) {
+                    $("#imgPreview").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    })
+</script>
+
+
+@section scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+       }   
+}
